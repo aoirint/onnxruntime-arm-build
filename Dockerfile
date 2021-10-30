@@ -33,7 +33,8 @@ EOF
 RUN <<EOF
     apt-get update
     apt-get install -y \
-        gcc-7
+        gcc-7 \
+        g++-7
 EOF
 
 WORKDIR /onnxruntime
