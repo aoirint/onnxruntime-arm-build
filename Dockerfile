@@ -22,8 +22,4 @@ RUN <<EOF
     git submodule update --init --recursive --jobs 0
 EOF
 
-ARG BUILD_OPTS="--config Release --parallel --build_shared_lib"
-RUN <<EOF
-    cd onnxruntime
-    bash ./build.sh ${BUILD_OPTS}
-EOF
+WORKDIR /onnxruntime
