@@ -30,4 +30,10 @@ RUN <<EOF
     echo 'string(APPEND CMAKE_CXX_FLAGS " -latomic")' >> cmake/CMakeLists.txt
 EOF
 
+RUN <<EOF
+    apt-get update
+    apt-get install -y \
+        gcc-7
+EOF
+
 WORKDIR /onnxruntime
