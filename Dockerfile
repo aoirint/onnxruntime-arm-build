@@ -10,7 +10,8 @@ RUN <<EOF
         git
 EOF
 
-ARG ONNXRUNTIME_VERSION=v1.9.0
+# v1.9.0 requires CMake 3.18 or higher. CMake on Debian buster is 3.13.
+ARG ONNXRUNTIME_VERSION=v1.8.2
 RUN <<EOF
     git clone --recursive https://github.com/microsoft/onnxruntime.git
     cd onnxruntime
