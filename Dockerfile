@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.3-labs
-ARG BASE_IMAGE=arm32v7/debian:buster
+ARG BASE_IMAGE=arm32v7/python:3.7.12-buster
 FROM ${BASE_IMAGE}
 
 RUN <<EOF
