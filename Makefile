@@ -1,4 +1,5 @@
 PLATFORM=linux/arm32v7
+# add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
 BUILD_OPTS=--config Release --parallel --build_shared_lib
 
 .PHONY: build
@@ -7,4 +8,13 @@ build:
 
 .PHONY: run
 run:
-	docker run --rm -v "$(PWD)/build:/onnxruntime/build" --platform "$(PLATFORM)" onnxruntime bash ./build.sh $(BUILD_OPTS)
+	docker run --rm \
+		-v "$(PWD)/build:/onnxruntime/build" \
+		--platform "$(PLATFORM)" \
+		-e "CC=gcc-7" \
+		-e "CXX=g++-7" \
+		onnxruntime bash ./build.sh $(BUILD_OPTS)
+
+.PHONY: bash
+bash:
+	docker run --rm -it --platform "$(PLATFORM)" onnxruntime bash
