@@ -7,4 +7,4 @@ build:
 
 .PHONY: run
 run:
-	docker run --rm -it -v "$(PWD)/build:/onnxruntime/build" --platform "$(PLATFORM)" onnxruntime bash ./build.sh $(BUILD_OPTS)
+	docker run --rm -v "$(PWD)/build:/onnxruntime/build" --platform "$(PLATFORM)" onnxruntime bash ./build.sh $(BUILD_OPTS)
