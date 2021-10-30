@@ -22,4 +22,12 @@ RUN <<EOF
     git submodule update --init --recursive --jobs 0
 EOF
 
+# https://github.com/microsoft/onnxruntime/issues/4189
+RUN <<EOF
+    cd onnxruntime
+
+    echo 'string(APPEND CMAKE_C_FLAGS " -latomic")' >> cmake/CMakeLists.txt
+    echo 'string(APPEND CMAKE_CXX_FLAGS " -latomic")' >> cmake/CMakeLists.txt
+EOF
+
 WORKDIR /onnxruntime
