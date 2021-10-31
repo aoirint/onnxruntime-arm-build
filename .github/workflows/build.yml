@@ -62,7 +62,7 @@ jobs:
             --platform "${{ env.PLATFORM }}" \
             -e "CC=gcc-7" \
             -e "CXX=g++-7" \
-            onnxruntime bash ./build.sh ${{ env.BUILD_OPTS }}
+            ${{ env.IMAGE_NAME }} bash ./build.sh ${{ env.BUILD_OPTS }}
 
       - name: Organize artifact
         run: |
