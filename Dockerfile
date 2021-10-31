@@ -7,7 +7,9 @@ RUN <<EOF
     apt-get install -y \
         build-essential \
         cmake \
-        git
+        git \
+        gcc-7 \
+        g++-7
 EOF
 
 # v1.9.0 requires CMake 3.18 or higher. CMake on Debian buster is 3.13.
@@ -28,13 +30,6 @@ RUN <<EOF
 
     echo 'string(APPEND CMAKE_C_FLAGS " -latomic")' >> cmake/CMakeLists.txt
     echo 'string(APPEND CMAKE_CXX_FLAGS " -latomic")' >> cmake/CMakeLists.txt
-EOF
-
-RUN <<EOF
-    apt-get update
-    apt-get install -y \
-        gcc-7 \
-        g++-7
 EOF
 
 WORKDIR /onnxruntime
