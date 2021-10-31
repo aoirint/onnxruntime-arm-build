@@ -67,7 +67,13 @@ jobs:
       - name: Organize artifact
         run: |
           mkdir artifact
-          cp build/Linux/Release/libonnxruntime* artifact/
+          cp build/Linux/Release/libonnxruntime.so artifact/
+
+          CONTAINER_ID=$(docker run -d ${{ env.IMAGE_NAME }})
+          docker cp $CONTAINER_ID:/onnxruntime/include ./artifact/
+          docker cp $CONTAINER_ID:/onnxruntime/VERSION_NUMBER ./artifact/
+          docker cp $CONTAINER_ID:/onnxruntime/LICENSE ./artifact/
+          docker rm -f $CONTAINER_ID
 
       # Upload
       - name: Upload artifact
