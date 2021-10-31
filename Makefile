@@ -1,6 +1,7 @@
 PLATFORM=linux/arm32v7
 # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
-BUILD_OPTS=--config Release --parallel --build_shared_lib
+# skip test: https://github.com/microsoft/onnxruntime/issues/2436
+BUILD_OPTS=--config Release --parallel --update --build --build_shared_lib
 
 .PHONY: build
 build:
