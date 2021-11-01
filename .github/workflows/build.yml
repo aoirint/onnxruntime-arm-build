@@ -11,14 +11,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/onnxruntime-arm-build
-      PLATFORM: linux/arm32v7
-      BASE_IMAGE: arm32v7/python:3.7.12-buster
-      ONNXRUNTIME_VERSION: v1.8.2
-      # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
-      # skip test: https://github.com/microsoft/onnxruntime/issues/2436
-      BUILD_OPTS: --config Release --parallel --update --build --build_shared_lib
+    matrix:
+      include:
+        - IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/onnxruntime-build:armhf
+          BASE_IMAGE: ubuntu:bionic
+          CC_VERSION: '8'
+          CXX_VERSION: '8'
+          ARCH: arm-linux-gnueabihf
+          ONNXRUNTIME_VERSION: v1.8.2
+          # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
+          # skip test: https://github.com/microsoft/onnxruntime/issues/2436
+          ATOMIC: '1'
+          BUILD_OPTS: --arm --config Release --parallel --update --build --build_shared_lib
 
     steps:
       - uses: actions/checkout@v2
@@ -46,34 +50,63 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           file: ./Dockerfile
           build-args: |
-            BASE_IMAGE=${{ env.BASE_IMAGE }}
-            ONNXRUNTIME_VERSION=${{ env.ONNXRUNTIME_VERSION }}
-          # target: ${{ matrix.target }}
-          platforms: ${{ env.PLATFORM }}
+            BASE_IMAGE=${{ matrix.BASE_IMAGE }}
+            CC_VERSION=${{ matrix.CC_VERSION }}
+            CXX_VERSION=${{ matrix.CXX_VERSION }}
+            ARCH=${{ matrix.ARCH }}
+            ONNXRUNTIME_VERSION=${{ matrix.ONNXRUNTIME_VERSION }}
+            ATOMIC=${{ matrix.ATOMIC }}
+          # target: ${{ matrix.TARGET }}
+          # platforms: ${{ matrix.PLATFORM }}
           load: true
-          tags: ${{ env.IMAGE_NAME }}
-          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}-buildcache
-          cache-to: type=registry,ref=${{ env.IMAGE_NAME }}-buildcache,mode=max
+          tags: ${{ matrix.IMAGE_TAG }}
+          cache-from: type=registry,ref=${{ matrix.IMAGE_TAG }}-buildcache
+          cache-to: type=registry,ref=${{ matrix.IMAGE_TAG }}-buildcache,mode=max
 
       - name: Build ONNX Runtime
         run: |
           docker run --rm \
             -v "${PWD}/build:/onnxruntime/build" \
-            --platform "${{ env.PLATFORM }}" \
-            -e "CC=gcc-7" \
-            -e "CXX=g++-7" \
-            ${{ env.IMAGE_NAME }} bash ./build.sh ${{ env.BUILD_OPTS }}
+            ${{ matrix.IMAGE_TAG }} bash ./build.sh ${{ matrix.BUILD_OPTS }}
 
       - name: Organize artifact
         run: |
           mkdir artifact
-          cp build/Linux/Release/libonnxruntime.so artifact/
 
-          CONTAINER_ID=$(docker run -d ${{ env.IMAGE_NAME }})
-          docker cp $CONTAINER_ID:/onnxruntime/include ./artifact/
+          # copy build artifact
+          mkdir artifact/lib
+          NAME=$(basename build/Linux/Release/libonnxruntime.so.*)
+          cp "build/Linux/Release/${NAME}" artifact/lib/
+          ln -s ${NAME} artifact/lib/libonnxruntime.so
+
+          # create a container to copy files from microsoft/onnxruntime repository
+          CONTAINER_ID=$(docker run -d ${{ matrix.IMAGE_TAG }})
+
+          # copy header files
+          mkdir ./artifact/include
+          readarray -t HEADERS <<EOF
+            onnxruntime/core/session/onnxruntime_c_api.h
+            onnxruntime/core/session/onnxruntime_cxx_api.h
+            onnxruntime/core/session/onnxruntime_cxx_inline.h
+            onnxruntime/core/providers/cpu/cpu_provider_factory.h
+            onnxruntime/core/session/onnxruntime_session_options_config_keys.h
+            onnxruntime/core/session/onnxruntime_run_options_config_keys.h
+            onnxruntime/core/framework/provider_options.h
+          EOF
+
+          for path in "${HEADERS[@]}"; do
+            docker cp "$CONTAINER_ID:/onnxruntime/include/${path}" ./artifact/include/
+          done
+
+          # copy docs & metadata
           docker cp $CONTAINER_ID:/onnxruntime/VERSION_NUMBER ./artifact/
           docker cp $CONTAINER_ID:/onnxruntime/LICENSE ./artifact/
+          docker cp $CONTAINER_ID:/onnxruntime/ThirdPartyNotices.txt ./artifact/
+          docker cp $CONTAINER_ID:/onnxruntime/docs/Privacy.md ./artifact/
+          docker cp $CONTAINER_ID:/onnxruntime/README.md ./artifact/
           docker rm -f $CONTAINER_ID
+
+          echo "$GITHUB_SHA" >> ./artifact/GIT_COMMIT_ID
 
       # Upload
       - name: Upload artifact
