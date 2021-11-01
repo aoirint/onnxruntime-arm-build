@@ -50,4 +50,10 @@ RUN <<EOF
     fi
 EOF
 
+RUN <<EOF
+    apt-get update
+    apt-get install -y \
+        python3
+EOF
+
 WORKDIR /onnxruntime
