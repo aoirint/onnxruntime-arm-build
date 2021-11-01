@@ -9,6 +9,7 @@ image-armhf:
 		--build-arg CC_VERSION=8 \
 		--build-arg CXX_VERSION=8 \
 		--build-arg ARCH=arm-linux-gnueabihf \
+		--build-arg LD_SYMLINK_NAME=ld-linux-armhf.so.3 \
 		--build-arg ATOMIC=1
 
 .PHONY: build-armhf
