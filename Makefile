@@ -1,7 +1,7 @@
 # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
 # skip test: https://github.com/microsoft/onnxruntime/issues/2436
 CONFIG=Release # Release, RelWithDebInfo
-BUILD_OPTS=--arm --config $(CONFIG) --parallel --update --build --build_shared_lib
+BUILD_OPTS=--arm --use_openmp --config $(CONFIG) --parallel --update --build --build_shared_lib
 
 .PHONY: image-armhf
 image-armhf:
