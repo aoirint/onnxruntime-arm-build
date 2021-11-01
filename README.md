@@ -11,3 +11,10 @@ We want to use Debian Buster-based images for binary compatibility,
 but Buster's CMake is 3.13.
 
 So the ONNX Runtime version is fixed at v1.8.2.
+
+## Build binary
+
+```shell
+sudo rm -rf build/
+make build-armhf CONFIG=RelWithDebInfo
+```
