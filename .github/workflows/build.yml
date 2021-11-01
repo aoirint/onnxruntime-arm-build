@@ -170,3 +170,11 @@ jobs:
           name: ${{ matrix.ARTIFACT_NAME }}
           path: ${{ matrix.ARTIFACT_NAME }}-${{ env.VERSION_NUMBER }}.tgz
           retention-days: 7
+
+      - name: Upload to Release
+        if: github.event.release.tag_name != ''
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }} # => github.event.release.tag_name
+          file: ${{ matrix.ARTIFACT_NAME }}-${{ env.VERSION_NUMBER }}.tgz
