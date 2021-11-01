@@ -27,6 +27,7 @@ jobs:
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm --config Release --parallel --update --build --build_shared_lib
+            RESULT_DIR: build/Linux/Release
 
           - ARTIFACT_NAME: onnxruntime-armhf-debug
             IMAGE_TAG: onnxruntime-build:armhf-debug
@@ -40,6 +41,7 @@ jobs:
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm --config RelWithDebInfo --parallel --update --build --build_shared_lib
+            RESULT_DIR: build/Linux/RelWithDebInfo
 
           - ARTIFACT_NAME: onnxruntime-aarch64
             IMAGE_TAG: onnxruntime-build:aarch64
@@ -53,6 +55,7 @@ jobs:
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm64 --config Release --parallel --update --build --build_shared_lib
+            RESULT_DIR: build/Linux/Release
 
           - ARTIFACT_NAME: onnxruntime-aarch64-debug
             IMAGE_TAG: onnxruntime-build:aarch64-debug
@@ -66,6 +69,7 @@ jobs:
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm64 --config RelWithDebInfo --parallel --update --build --build_shared_lib
+            RESULT_DIR: build/Linux/RelWithDebInfo
 
     env:
       IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.IMAGE_TAG }}
@@ -122,8 +126,8 @@ jobs:
 
           # copy build artifact
           mkdir artifact/lib
-          NAME=$(basename build/Linux/Release/libonnxruntime.so.*)
-          cp "build/Linux/Release/${NAME}" artifact/lib/
+          NAME=$(basename ${{ matrix.RESULT_DIR }}/libonnxruntime.so.*)
+          cp "${{ matrix.RESULT_DIR }}/${NAME}" artifact/lib/
           ln -s ${NAME} artifact/lib/libonnxruntime.so
 
           # create a container to copy files from microsoft/onnxruntime repository
