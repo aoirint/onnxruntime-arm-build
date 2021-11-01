@@ -7,6 +7,9 @@ on:
   #   types:
   #     - published
 
+env:
+  ONNXRUNTIME_VERSION: v1.8.2
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
             CC_VERSION: '8'
             CXX_VERSION: '8'
             ARCH: arm-linux-gnueabihf
-            ONNXRUNTIME_VERSION: v1.8.2
+            ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
@@ -33,11 +36,35 @@ jobs:
             CC_VERSION: '8'
             CXX_VERSION: '8'
             ARCH: arm-linux-gnueabihf
-            ONNXRUNTIME_VERSION: v1.8.2
+            ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm --config RelWithDebInfo --parallel --update --build --build_shared_lib
+
+          - ARTIFACT_NAME: onnxruntime-aarch64
+            IMAGE_TAG: onnxruntime-build:aarch64
+            BASE_IMAGE: ubuntu:bionic
+            CC_VERSION: '8'
+            CXX_VERSION: '8'
+            ARCH: aarch64-linux-gnu
+            ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
+            # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
+            # skip test: https://github.com/microsoft/onnxruntime/issues/2436
+            ATOMIC: '1'
+            BUILD_OPTS: --arm64 --config Release --parallel --update --build --build_shared_lib
+
+          - ARTIFACT_NAME: onnxruntime-aarch64-debug
+            IMAGE_TAG: onnxruntime-build:aarch64-debug
+            BASE_IMAGE: ubuntu:bionic
+            CC_VERSION: '8'
+            CXX_VERSION: '8'
+            ARCH: aarch64-linux-gnu
+            ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
+            # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
+            # skip test: https://github.com/microsoft/onnxruntime/issues/2436
+            ATOMIC: '1'
+            BUILD_OPTS: --arm64 --config RelWithDebInfo --parallel --update --build --build_shared_lib
 
     env:
       IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.IMAGE_TAG }}
