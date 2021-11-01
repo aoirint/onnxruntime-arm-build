@@ -28,7 +28,7 @@ RUN <<EOF
     bash /tmp/cmake.sh --skip-license --prefix=/usr/local
 EOF
 
-ARG ONNXRUNTIME_VERSION=v1.9.0
+ARG ONNXRUNTIME_VERSION=v1.8.1
 RUN <<EOF
     git clone --recursive https://github.com/microsoft/onnxruntime.git
     cd onnxruntime

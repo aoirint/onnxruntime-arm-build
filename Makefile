@@ -10,7 +10,7 @@ image-armhf:
 		--build-arg CC_VERSION=8 \
 		--build-arg CXX_VERSION=8 \
 		--build-arg ARCH=arm-linux-gnueabihf \
-		--build-arg CMAKE_SYSTEM_PROCESSOR=armv7l \
+		--build-arg CMAKE_SYSTEM_PROCESSOR=armv7 \
 		--build-arg LD_SYMLINK_NAME=ld-linux-armhf.so.3 \
 		--build-arg ATOMIC=1
 
