@@ -1,6 +1,7 @@
 # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
 # skip test: https://github.com/microsoft/onnxruntime/issues/2436
-BUILD_OPTS=--arm --config Release --parallel --update --build --build_shared_lib
+CONFIG=Release
+BUILD_OPTS=--arm --config $(CONFIG) --parallel --update --build --build_shared_lib
 
 .PHONY: image-armhf
 image-armhf:
@@ -14,7 +15,7 @@ image-armhf:
 
 .PHONY: build-armhf
 build-armhf: image-armhf
-	docker run --rm \
+	docker run --rm -it \
 		-v "$(PWD)/build:/onnxruntime/build" \
 		onnxruntime:armhf bash ./build.sh $(BUILD_OPTS)
 
