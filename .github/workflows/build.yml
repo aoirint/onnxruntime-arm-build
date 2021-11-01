@@ -165,7 +165,7 @@ jobs:
           echo "$GITHUB_SHA" >> ./artifact/GIT_COMMIT_ID
 
           cd artifact
-          tar cf onnxruntime.tgz *
+          tar cf ../onnxruntime.tgz *
 
       # Upload
       - name: Upload artifact
