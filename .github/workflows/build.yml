@@ -15,7 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - IMAGE_TAG: onnxruntime-build:armhf
+          - ARTIFACT_NAME: onnxruntime-armhf
+            IMAGE_TAG: onnxruntime-build:armhf
             BASE_IMAGE: ubuntu:bionic
             CC_VERSION: '8'
             CXX_VERSION: '8'
@@ -113,10 +114,12 @@ jobs:
 
           echo "$GITHUB_SHA" >> ./artifact/GIT_COMMIT_ID
 
+          tar cf artifact/* onnxruntime.tgz
+
       # Upload
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: artifact
-          path: artifact/*
+          name: ${{ matrix.ARTIFACT_NAME }}
+          path: onnxruntime.tgz
           retention-days: 7
