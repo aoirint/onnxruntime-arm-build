@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/onnxruntime-build:armhf
+          - IMAGE_TAG: onnxruntime-build:armhf
             BASE_IMAGE: ubuntu:bionic
             CC_VERSION: '8'
             CXX_VERSION: '8'
@@ -24,6 +25,9 @@ jobs:
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm --config Release --parallel --update --build --build_shared_lib
+
+    env:
+      IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.IMAGE_TAG }}
 
     steps:
       - uses: actions/checkout@v2
@@ -60,15 +64,15 @@ jobs:
           # target: ${{ matrix.TARGET }}
           # platforms: ${{ matrix.PLATFORM }}
           load: true
-          tags: ${{ matrix.IMAGE_TAG }}
-          cache-from: type=registry,ref=${{ matrix.IMAGE_TAG }}-buildcache
-          cache-to: type=registry,ref=${{ matrix.IMAGE_TAG }}-buildcache,mode=max
+          tags: ${{ env.IMAGE_TAG }}
+          cache-from: type=registry,ref=${{ env.IMAGE_TAG }}-buildcache
+          cache-to: type=registry,ref=${{ env.IMAGE_TAG }}-buildcache,mode=max
 
       - name: Build ONNX Runtime
         run: |
           docker run --rm \
             -v "${PWD}/build:/onnxruntime/build" \
-            ${{ matrix.IMAGE_TAG }} bash ./build.sh ${{ matrix.BUILD_OPTS }}
+            ${{ env.IMAGE_TAG }} bash ./build.sh ${{ matrix.BUILD_OPTS }}
 
       - name: Organize artifact
         run: |
@@ -81,7 +85,7 @@ jobs:
           ln -s ${NAME} artifact/lib/libonnxruntime.so
 
           # create a container to copy files from microsoft/onnxruntime repository
-          CONTAINER_ID=$(docker run -d ${{ matrix.IMAGE_TAG }})
+          CONTAINER_ID=$(docker run -d ${{ env.IMAGE_TAG }})
 
           # copy header files
           mkdir ./artifact/include
