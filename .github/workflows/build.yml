@@ -75,6 +75,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set BUILD_IDENTIFIER env var
+        run: |
+          echo "BUILD_IDENTIFIER=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
       - name: Setup Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -152,17 +156,15 @@ jobs:
 
           echo "$GITHUB_SHA" >> ./artifact/GIT_COMMIT_ID
 
-          echo "VERSION_NUMBER=$(cat ./artifact/VERSION_NUMBER)" >> $GITHUB_ENV
-
           cd artifact
-          tar cf ../${{ matrix.ARTIFACT_NAME }}-${{ env.VERSION_NUMBER }}.tgz *
+          tar cf ../${{ matrix.ARTIFACT_NAME }}-${{ env.BUILD_IDENTIFIER }}.tgz *
 
       # Upload
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.ARTIFACT_NAME }}
-          path: ${{ matrix.ARTIFACT_NAME }}-${{ env.VERSION_NUMBER }}.tgz
+          path: ${{ matrix.ARTIFACT_NAME }}-${{ env.BUILD_IDENTIFIER }}.tgz
           retention-days: 7
 
       - name: Upload to Release
@@ -171,4 +173,4 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }} # => github.event.release.tag_name
-          file: ${{ matrix.ARTIFACT_NAME }}-${{ env.VERSION_NUMBER }}.tgz
+          file: ${{ matrix.ARTIFACT_NAME }}-${{ env.BUILD_IDENTIFIER }}.tgz
