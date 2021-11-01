@@ -22,7 +22,7 @@ jobs:
             CXX_VERSION: '8'
             ARCH: arm-linux-gnueabihf
             LD_SYMLINK_NAME: ld-linux-armhf.so.3
-            ONNXRUNTIME_VERSION: v1.9.0
+            ONNXRUNTIME_VERSION: v1.9.1
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
@@ -36,7 +36,7 @@ jobs:
             CXX_VERSION: '8'
             ARCH: arm-linux-gnueabihf
             LD_SYMLINK_NAME: ld-linux-armhf.so.3
-            ONNXRUNTIME_VERSION: v1.9.0
+            ONNXRUNTIME_VERSION: v1.9.1
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
@@ -50,7 +50,7 @@ jobs:
             CXX_VERSION: '8'
             ARCH: aarch64-linux-gnu
             LD_SYMLINK_NAME: ld-linux-aarch64.so.1
-            ONNXRUNTIME_VERSION: v1.9.0
+            ONNXRUNTIME_VERSION: v1.9.1
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
@@ -64,7 +64,7 @@ jobs:
             CXX_VERSION: '8'
             ARCH: aarch64-linux-gnu
             LD_SYMLINK_NAME: ld-linux-aarch64.so.1
-            ONNXRUNTIME_VERSION: v1.9.0
+            ONNXRUNTIME_VERSION: v1.9.1
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
