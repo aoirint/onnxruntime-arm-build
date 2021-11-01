@@ -49,7 +49,7 @@ RUN <<EOF
     if [ "${ATOMIC}" = "1" ]; then
         echo 'string(APPEND CMAKE_C_FLAGS " -latomic")' >> cmake/CMakeLists.txt
         echo 'string(APPEND CMAKE_CXX_FLAGS " -latomic")' >> cmake/CMakeLists.txt
-        echo 'set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_SYSTEM_PROCESSOR}")' >> cmake/CMakeLists.txt
+        echo "set(CMAKE_SYSTEM_PROCESSOR \"${CMAKE_SYSTEM_PROCESSOR}\")" >> cmake/CMakeLists.txt
     fi
 EOF
 
