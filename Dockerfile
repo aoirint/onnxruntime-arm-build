@@ -17,7 +17,8 @@ RUN <<EOF
         git \
         wget \
         gcc-${CC_VERSION}-${ARCH} \
-        g++-${CXX_VERSION}-${ARCH}
+        g++-${CXX_VERSION}-${ARCH} \
+        python3
 EOF
 
 # ONNX Runtime v1.9.0 requires CMake 3.18 or higher.
@@ -50,10 +51,12 @@ RUN <<EOF
     fi
 EOF
 
+ARG LD_SYMLINK_NAME=ld-linux-armhf.so.3
 RUN <<EOF
-    apt-get update
-    apt-get install -y \
-        python3
+    if [ -n "${LD_SYMLINK_NAME}" ]; then
+        ln -s /usr/${ARCH}/lib /lib/${ARCH}
+        ln -s /lib/${ARCH}/ld-*.so /lib/${LD_SYMLINK_NAME}
+    fi
 EOF
 
 WORKDIR /onnxruntime
