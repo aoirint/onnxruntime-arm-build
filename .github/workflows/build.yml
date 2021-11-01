@@ -27,6 +27,18 @@ jobs:
             ATOMIC: '1'
             BUILD_OPTS: --arm --config Release --parallel --update --build --build_shared_lib
 
+          - ARTIFACT_NAME: onnxruntime-armhf-debug
+            IMAGE_TAG: onnxruntime-build:armhf-debug
+            BASE_IMAGE: ubuntu:bionic
+            CC_VERSION: '8'
+            CXX_VERSION: '8'
+            ARCH: arm-linux-gnueabihf
+            ONNXRUNTIME_VERSION: v1.8.2
+            # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
+            # skip test: https://github.com/microsoft/onnxruntime/issues/2436
+            ATOMIC: '1'
+            BUILD_OPTS: --arm --config RelWithDebInfo --parallel --update --build --build_shared_lib
+
     env:
       IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.IMAGE_TAG }}
 
