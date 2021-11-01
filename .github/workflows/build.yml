@@ -24,6 +24,7 @@ jobs:
             CC_VERSION: '8'
             CXX_VERSION: '8'
             ARCH: arm-linux-gnueabihf
+            LD_SYMLINK_NAME: ld-linux-armhf.so.3
             ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
@@ -36,6 +37,7 @@ jobs:
             CC_VERSION: '8'
             CXX_VERSION: '8'
             ARCH: arm-linux-gnueabihf
+            LD_SYMLINK_NAME: ld-linux-armhf.so.3
             ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
@@ -48,6 +50,7 @@ jobs:
             CC_VERSION: '8'
             CXX_VERSION: '8'
             ARCH: aarch64-linux-gnu
+            LD_SYMLINK_NAME: ld-linux-aarch64.so.1
             ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
@@ -60,6 +63,7 @@ jobs:
             CC_VERSION: '8'
             CXX_VERSION: '8'
             ARCH: aarch64-linux-gnu
+            LD_SYMLINK_NAME: ld-linux-aarch64.so.1
             ONNXRUNTIME_VERSION: ${{ env.ONNXRUNTIME_VERSION }}
             # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
             # skip test: https://github.com/microsoft/onnxruntime/issues/2436
@@ -99,6 +103,7 @@ jobs:
             CC_VERSION=${{ matrix.CC_VERSION }}
             CXX_VERSION=${{ matrix.CXX_VERSION }}
             ARCH=${{ matrix.ARCH }}
+            LD_SYMLINK_NAME=${{ matrix.LD_SYMLINK_NAME }}
             ONNXRUNTIME_VERSION=${{ matrix.ONNXRUNTIME_VERSION }}
             ATOMIC=${{ matrix.ATOMIC }}
           # target: ${{ matrix.TARGET }}
