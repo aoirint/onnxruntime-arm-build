@@ -91,13 +91,13 @@ jobs:
           # copy header files
           mkdir ./artifact/include
           readarray -t HEADERS <<EOF
-            onnxruntime/core/session/onnxruntime_c_api.h
-            onnxruntime/core/session/onnxruntime_cxx_api.h
-            onnxruntime/core/session/onnxruntime_cxx_inline.h
-            onnxruntime/core/providers/cpu/cpu_provider_factory.h
-            onnxruntime/core/session/onnxruntime_session_options_config_keys.h
-            onnxruntime/core/session/onnxruntime_run_options_config_keys.h
-            onnxruntime/core/framework/provider_options.h
+          onnxruntime/core/session/onnxruntime_c_api.h
+          onnxruntime/core/session/onnxruntime_cxx_api.h
+          onnxruntime/core/session/onnxruntime_cxx_inline.h
+          onnxruntime/core/providers/cpu/cpu_provider_factory.h
+          onnxruntime/core/session/onnxruntime_session_options_config_keys.h
+          onnxruntime/core/session/onnxruntime_run_options_config_keys.h
+          onnxruntime/core/framework/provider_options.h
           EOF
 
           for path in "${HEADERS[@]}"; do
