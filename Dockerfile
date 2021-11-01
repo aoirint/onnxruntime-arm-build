@@ -42,12 +42,14 @@ EOF
 # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
 # skip test: https://github.com/microsoft/onnxruntime/issues/2436
 ARG ATOMIC=1
+ARG CMAKE_SYSTEM_PROCESSOR=armv7l
 RUN <<EOF
     cd onnxruntime
 
     if [ "${ATOMIC}" = "1" ]; then
         echo 'string(APPEND CMAKE_C_FLAGS " -latomic")' >> cmake/CMakeLists.txt
         echo 'string(APPEND CMAKE_CXX_FLAGS " -latomic")' >> cmake/CMakeLists.txt
+        echo 'set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_SYSTEM_PROCESSOR}")' >> cmake/CMakeLists.txt
     fi
 EOF
 
