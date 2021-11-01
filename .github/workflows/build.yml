@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - ARTIFACT_NAME: onnxruntime-armhf
+          - ARTIFACT_NAME: onnxruntime-linux-armhf
             IMAGE_TAG: onnxruntime-build:armhf
             BASE_IMAGE: ubuntu:bionic
             CC_VERSION: '8'
@@ -24,13 +24,11 @@ jobs:
             CMAKE_SYSTEM_PROCESSOR: armv7l
             LD_SYMLINK_NAME: ld-linux-armhf.so.3
             ONNXRUNTIME_VERSION: v1.8.2
-            # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
-            # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm --config Release --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/Release
 
-          - ARTIFACT_NAME: onnxruntime-armhf-debug
+          - ARTIFACT_NAME: onnxruntime-linux-armhf-debug
             IMAGE_TAG: onnxruntime-build:armhf-debug
             BASE_IMAGE: ubuntu:bionic
             CC_VERSION: '8'
@@ -39,13 +37,11 @@ jobs:
             CMAKE_SYSTEM_PROCESSOR: armv7l
             LD_SYMLINK_NAME: ld-linux-armhf.so.3
             ONNXRUNTIME_VERSION: v1.8.2
-            # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
-            # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm --config RelWithDebInfo --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/RelWithDebInfo
 
-          - ARTIFACT_NAME: onnxruntime-aarch64
+          - ARTIFACT_NAME: onnxruntime-linux-aarch64
             IMAGE_TAG: onnxruntime-build:aarch64
             BASE_IMAGE: ubuntu:bionic
             CC_VERSION: '8'
@@ -54,13 +50,11 @@ jobs:
             CMAKE_SYSTEM_PROCESSOR: aarch64
             LD_SYMLINK_NAME: ld-linux-aarch64.so.1
             ONNXRUNTIME_VERSION: v1.8.2
-            # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
-            # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm64 --config Release --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/Release
 
-          - ARTIFACT_NAME: onnxruntime-aarch64-debug
+          - ARTIFACT_NAME: onnxruntime-linux-aarch64-debug
             IMAGE_TAG: onnxruntime-build:aarch64-debug
             BASE_IMAGE: ubuntu:bionic
             CC_VERSION: '8'
@@ -69,8 +63,6 @@ jobs:
             CMAKE_SYSTEM_PROCESSOR: aarch64
             LD_SYMLINK_NAME: ld-linux-aarch64.so.1
             ONNXRUNTIME_VERSION: v1.8.2
-            # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
-            # skip test: https://github.com/microsoft/onnxruntime/issues/2436
             ATOMIC: '1'
             BUILD_OPTS: --arm64 --config RelWithDebInfo --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/RelWithDebInfo
@@ -164,13 +156,15 @@ jobs:
 
           echo "$GITHUB_SHA" >> ./artifact/GIT_COMMIT_ID
 
+          echo "VERSION_NUMBER=$(cat ./artifact/VERSION_NUMBER)" >> $GITHUB_ENV
+
           cd artifact
-          tar cf ../${{ matrix.ARTIFACT_NAME }}.tgz *
+          tar cf ../${{ matrix.ARTIFACT_NAME }}-${{ env.VERSION_NUMBER }}.tgz *
 
       # Upload
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.ARTIFACT_NAME }}
-          path: ${{ matrix.ARTIFACT_NAME }}.tgz
+          path: ${{ matrix.ARTIFACT_NAME }}-${{ env.VERSION_NUMBER }}.tgz
           retention-days: 7

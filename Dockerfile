@@ -41,6 +41,7 @@ EOF
 
 # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
 # skip test: https://github.com/microsoft/onnxruntime/issues/2436
+# CMAKE_SYSTEM_PROCESSOR: https://github.com/microsoft/onnxruntime/releases/tag/v1.9.0
 ARG ATOMIC=1
 ARG CMAKE_SYSTEM_PROCESSOR=armv7l
 RUN <<EOF
