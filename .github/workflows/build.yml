@@ -165,12 +165,12 @@ jobs:
           echo "$GITHUB_SHA" >> ./artifact/GIT_COMMIT_ID
 
           cd artifact
-          tar cf ../onnxruntime.tgz *
+          tar cf ../${{ matrix.ARTIFACT_NAME }}.tgz *
 
       # Upload
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.ARTIFACT_NAME }}
-          path: onnxruntime.tgz
+          path: ${{ matrix.ARTIFACT_NAME }}.tgz
           retention-days: 7
