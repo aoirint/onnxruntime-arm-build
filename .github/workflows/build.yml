@@ -25,7 +25,7 @@ jobs:
             LD_SYMLINK_NAME: ld-linux-armhf.so.3
             ONNXRUNTIME_VERSION: v1.8.2
             ATOMIC: '1'
-            BUILD_OPTS: --arm --config Release --parallel --update --build --build_shared_lib
+            BUILD_OPTS: --arm --use_openmp --config Release --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/Release
 
           - ARTIFACT_NAME: onnxruntime-linux-armhf-debug
@@ -38,7 +38,7 @@ jobs:
             LD_SYMLINK_NAME: ld-linux-armhf.so.3
             ONNXRUNTIME_VERSION: v1.8.2
             ATOMIC: '1'
-            BUILD_OPTS: --arm --config RelWithDebInfo --parallel --update --build --build_shared_lib
+            BUILD_OPTS: --arm --use_openmp --config RelWithDebInfo --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/RelWithDebInfo
 
           - ARTIFACT_NAME: onnxruntime-linux-aarch64
@@ -51,7 +51,7 @@ jobs:
             LD_SYMLINK_NAME: ld-linux-aarch64.so.1
             ONNXRUNTIME_VERSION: v1.8.2
             ATOMIC: '1'
-            BUILD_OPTS: --arm64 --config Release --parallel --update --build --build_shared_lib
+            BUILD_OPTS: --arm64 --use_openmp --config Release --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/Release
 
           - ARTIFACT_NAME: onnxruntime-linux-aarch64-debug
@@ -64,7 +64,7 @@ jobs:
             LD_SYMLINK_NAME: ld-linux-aarch64.so.1
             ONNXRUNTIME_VERSION: v1.8.2
             ATOMIC: '1'
-            BUILD_OPTS: --arm64 --config RelWithDebInfo --parallel --update --build --build_shared_lib
+            BUILD_OPTS: --arm64 --use_openmp --config RelWithDebInfo --parallel --update --build --build_shared_lib
             RESULT_DIR: build/Linux/RelWithDebInfo
 
     env:
