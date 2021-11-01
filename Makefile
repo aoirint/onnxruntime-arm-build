@@ -1,21 +1,22 @@
-PLATFORM=linux/arm32v7
 # add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
 # skip test: https://github.com/microsoft/onnxruntime/issues/2436
-BUILD_OPTS=--config Release --parallel --update --build --build_shared_lib
+BUILD_OPTS=--arm --config Release --parallel --update --build --build_shared_lib
 
-.PHONY: build
-build:
-	docker buildx build . --platform "$(PLATFORM)" -t onnxruntime
+.PHONY: image-armhf
+image-armhf:
+	docker buildx build . \
+		-t onnxruntime:armhf \
+		--build-arg CC_VERSION=8 \
+		--build-arg CXX_VERSION=8 \
+		--build-arg ARCH=arm-linux-gnueabihf \
+		--build-arg ATOMIC=1
 
-.PHONY: run
-run:
+.PHONY: build-armhf
+build-armhf: image-armhf
 	docker run --rm \
 		-v "$(PWD)/build:/onnxruntime/build" \
-		--platform "$(PLATFORM)" \
-		-e "CC=gcc-7" \
-		-e "CXX=g++-7" \
-		onnxruntime bash ./build.sh $(BUILD_OPTS)
+		onnxruntime:armhf bash ./build.sh $(BUILD_OPTS)
 
-.PHONY: bash
-bash:
-	docker run --rm -it --platform "$(PLATFORM)" onnxruntime bash
+.PHONY: bash-armhf
+bash-armhf:
+	docker run --rm -it onnxruntime:armhf bash

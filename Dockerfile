@@ -1,18 +1,32 @@
 # syntax=docker/dockerfile:1.3-labs
-ARG BASE_IMAGE=arm32v7/python:3.7.12-buster
+ARG BASE_IMAGE=ubuntu:bionic
 FROM ${BASE_IMAGE}
+
+ARG CC_VERSION=8
+ARG CXX_VERSION=8
+
+ARG ARCH=arm-linux-gnueabihf
+
+ENV CC=${ARCH}-gcc-${CC_VERSION}
+ENV CXX=${ARCH}-g++-${CXX_VERSION}
 
 RUN <<EOF
     apt-get update
     apt-get install -y \
         build-essential \
-        cmake \
         git \
-        gcc-7 \
-        g++-7
+        wget \
+        gcc-${CC_VERSION}-${ARCH} \
+        g++-${CXX_VERSION}-${ARCH}
 EOF
 
-# v1.9.0 requires CMake 3.18 or higher. CMake on Debian buster is 3.13.
+# ONNX Runtime v1.9.0 requires CMake 3.18 or higher.
+ARG CMAKE_VERSION=3.22.0-rc2
+RUN <<EOF
+    wget -O /tmp/cmake.sh https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh
+    bash /tmp/cmake.sh --skip-license --prefix=/usr/local
+EOF
+
 ARG ONNXRUNTIME_VERSION=v1.8.2
 RUN <<EOF
     git clone --recursive https://github.com/microsoft/onnxruntime.git
@@ -24,12 +38,16 @@ RUN <<EOF
     git submodule update --init --recursive --jobs 0
 EOF
 
-# https://github.com/microsoft/onnxruntime/issues/4189
+# add --arm for gcc-8: https://github.com/microsoft/onnxruntime/issues/4189
+# skip test: https://github.com/microsoft/onnxruntime/issues/2436
+ARG ATOMIC=1
 RUN <<EOF
     cd onnxruntime
 
-    echo 'string(APPEND CMAKE_C_FLAGS " -latomic")' >> cmake/CMakeLists.txt
-    echo 'string(APPEND CMAKE_CXX_FLAGS " -latomic")' >> cmake/CMakeLists.txt
+    if [ "${ATOMIC}" = "1" ]; then
+        echo 'string(APPEND CMAKE_C_FLAGS " -latomic")' >> cmake/CMakeLists.txt
+        echo 'string(APPEND CMAKE_CXX_FLAGS " -latomic")' >> cmake/CMakeLists.txt
+    fi
 EOF
 
 WORKDIR /onnxruntime
